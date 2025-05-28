@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Automated Job Search System</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- Boxicons for icons -->
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <a class="navbar-brand" href="#">JobSearch</a>
+  <button
+    class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarContent"
+    aria-controls="navbarContent"
+    aria-expanded="false"
+    aria-label="Toggle navigation"
+  >
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active"><a class="nav-link" href="#">Home</a></li>
+
+      <!-- User Profile Dropdown -->
+      <li class="nav-item dropdown">
+        <a
+          class="nav-link dropdown-toggle"
+          href="#"
+          id="userProfileDropdown"
+          role="button"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          User Profile
+        </a>
+        <div class="dropdown-menu" aria-labelledby="userProfileDropdown">
+          <a class="dropdown-item" href="#">View Profile</a>
+          <a class="dropdown-item" href="#">Edit Profile</a>
+          <a class="dropdown-item" href="#">Settings</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">Logout</a>
+        </div>
+      </li>
+
+      <li class="nav-item"><a class="nav-link" href="#">Resume Upload</a></li>
+      <li class="nav-item"><a class="nav-link" href="#">Notifications</a></li>
+
+      <!-- Employer Section Dropdown -->
+      <li class="nav-item dropdown">
+        <a
+          class="nav-link dropdown-toggle"
+          href="#"
+          id="employerDropdown"
+          role="button"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          Employer Section
+        </a>
+        <div class="dropdown-menu" aria-labelledby="employerDropdown">
+          <a
+            class="dropdown-item"
+            href="#"
+            data-toggle="modal"
+            data-target="#postJobModal"
+            >Post Job Listings</a
+          >
+          <a
+            class="dropdown-item"
+            href="#"
+            data-toggle="modal"
+            data-target="#manageJobsModal"
+            >Manage Job Openings</a
+          >
+          <a
+            class="dropdown-item"
+            href="#"
+            data-toggle="modal"
+            data-target="#searchResumesModal"
+            >Search Resumes</a
+          >
+          <a
+            class="dropdown-item"
+            href="#"
+            data-toggle="modal"
+            data-target="#manageApplicationsModal"
+            >Manage Applications</a
+          >
+        </div>
+      </li>
+
+      <li class="nav-item"><a class="nav-link" href="#">Application Status</a></li>
+    </ul>
+
+    <form class="form-inline my-2 my-lg-0">
+      <input
+        class="form-control mr-sm-2"
+        type="search"
+        placeholder="Search"
+        aria-label="Search"
+      />
+      <button class="btn btn-outline-light my-2 my-sm-0" type="submit">
+        Search
+      </button>
+    </form>
+  </div>
+</nav>
+
+<!-- Job Seeker Registration and Profile Section -->
+<section class="container my-5">
+  <h2 class="text-center mb-4">Job Seeker Registration & Profile</h2>
+  <form id="jobSeekerForm">
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="fullName">Full Name</label>
+        <input
+          type="text"
+          class="form-control"
+          id="fullName"
+          placeholder="Enter your full name"
+          required
+        />
+      </div>
+      <div class="form-group col-md-6">
+        <label for="email">Email</label>
+        <input
+          type="email"
+          class="form-control"
+          id="email"
+          placeholder="Enter your email"
+          required
+        />
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="skills">Skills</label>
+      <input
+        type="text"
+        class="form-control"
+        id="skills"
+        placeholder="e.g., JavaScript, HTML, CSS, React"
+        required
+      />
+    </div>
+    <div class="form-group">
+      <label for="resume">Upload Resume</label>
+      <input type="file" class="form-control-file" id="resume" />
+    </div>
+    <button type="submit" class="btn btn-success">
+      Register & Create Profile
+    </button>
+  </form>
+
+  <!-- Results of AI Matching -->
+  <div id="jobResults" class="mt-4"></div>
+</section>
+
+<!-- Job Search Filter Section -->
+<section class="job-search-section container my-5">
+  <h2 class="text-center mb-4">Find Your Ideal Job</h2>
+  <form class="row g-3">
+    <div class="col-md-4 mb-3">
+      <label for="location" class="form-label">Location</label>
+      <input
+        type="text"
+        class="form-control"
+        id="location"
+        placeholder="e.g., New York, Remote"
+      />
+    </div>
+    <div class="col-md-4 mb-3">
+      <label for="industry" class="form-label">Industry</label>
+      <select class="form-control" id="industry">
+        <option value="">Select Industry</option>
+        <option>Technology</option>
+        <option>Healthcare</option>
+        <option>Education</option>
+        <option>Finance</option>
+        <option>Marketing</option>
+      </select>
+    </div>
+    <div class="col-md-4 mb-3">
+      <label for="salary" class="form-label">Salary Range</label>
+      <select class="form-control" id="salary">
+        <option value="">Select Range</option>
+        <option>$0 - $500</option>
+        <option>$500 - $1000</option>
+        <option>$1000 - $2000</option>
+        <option>$2000+</option>
+      </select>
+    </div>
+    <div class="col-md-4 mb-3">
+      <label for="jobType" class="form-label">Job Type</label>
+      <select class="form-control" id="jobType">
+        <option value="">Select Type</option>
+        <option>Full Time</option>
+        <option>Part Time</option>
+        <option>Internship</option>
+        <option>Freelance</option>
+      </select>
+    </div>
+    <div class="col-md-4 mb-3">
+      <label for="keywords" class="form-label">Keywords</label>
+      <input
+        type="text"
+        class="form-control"
+        id="keywords"
+        placeholder="e.g., Web Developer, Data Analyst"
+      />
+    </div>
+    <div class="col-md-4 mb-3 d-flex align-items-end">
+      <button type="submit" class="btn btn-primary w-100">Search Jobs</button>
+    </div>
+  </form>
+</section>
+
+<!-- Modals for Employer Actions -->
+<!-- Post Job Modal -->
+<div
+  class="modal fade"
+  id="postJobModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="postJobModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <!-- Modal content for posting a job -->
+      <div class="modal-header">
+        <h5 class="modal-title" id="postJobModalLabel">Post a Job Listing</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- Form fields for job posting -->
+        <form id="postJobForm">
+          <div class="form-group">
+            <label for="jobTitle">Job Title</label>
+            <input type="text" class="form-control" id="jobTitle" required />
+          </div>
+          <div class="form-group">
+            <label for="jobDescription">Description</label>
+            <textarea
+              class="form-control"
+              id="jobDescription"
+              rows="3"
+              required
+            ></textarea>
+          </div>
+          <div class="form-group">
+            <label for="jobRequirements">Requirements</label>
+            <textarea
+              class="form-control"
+              id="jobRequirements"
+              rows="3"
+              required
+            ></textarea>
+          </div>
+          <div class="form-group">
+            <label for="jobLocation">Location</label>
+            <input type="text" class="form-control" id="jobLocation" required />
+          </div>
+          <button type="submit" class="btn btn-primary">Post Job</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Additional modals for Manage Jobs, Search Resumes, and Manage Applications can be added similarly -->
+
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="script.js"></script>
+
+<script>
+  // Sample jobs database
+  const jobs = [
+    {
+      id: 1,
+      title: "Front-End Developer",
+      description: "Looking for a front-end developer skilled in React and CSS",
+    },
+    {
+      id: 2,
+      title: "Back-End Developer",
+      description: "Experience with Node.js and database management",
+    },
+    {
+      id: 3,
+      title: "Full Stack Developer",
+      description:
+        "Requires knowledge of JavaScript, React, Node.js, and SQL",
+    },
+  ];
+
+  // Calculate similarity based on common words
+  function calculateSimilarity(text1, text2) {
+    const words1 = new Set(text1.toLowerCase().split(/\W+/));
+    const words2 = new Set(text2.toLowerCase().split(/\W+/));
+    let commonCount = 0;
+    words1.forEach((word) => {
+      if (words2.has(word)) commonCount++;
+    });
+    return commonCount / Math.max(words1.size, words2.size);
+  }
+
+  // Find jobs matching candidate skills
+  function findMatchingJobs(candidateSkills) {
+    const resultsDiv = document.getElementById("jobResults");
+    resultsDiv.innerHTML = "";
+
+    const scoredJobs = jobs.map((job) => {
+      return {
+        ...job,
+        score: calculateSimilarity(candidateSkills, job.description),
+      };
+    });
+
+    // Sort jobs by highest score first
+    scoredJobs.sort((a, b) => b.score - a.score);
+
+    scoredJobs.forEach((job) => {
+      if (job.score > 0) {
+        const jobCard = document.createElement("div");
+        jobCard.className = "card mb-3";
+        jobCard.innerHTML = `
+          <div class="card-body">
+            <h5 class="card-title">${job.title}</h5>
+            <p class="card-text">${job.description}</p>
+          </div>
+        `;
+        resultsDiv.appendChild(jobCard);
+      }
+    });
+
+    if (!scoredJobs.some((job) => job.score > 0)) {
+      resultsDiv.innerHTML = "<p>No matching jobs found.</p>";
+    }
+  }
+
+  // Handle form submission
+  document
+    .getElementById("jobSeekerForm")
+    .addEventListener("submit", function (e) {
+      e.preventDefault();
+      const skills = document.getElementById("skills").value;
+      findMatchingJobs(skills);
+    });
+</script>
+</body>
+</html>
